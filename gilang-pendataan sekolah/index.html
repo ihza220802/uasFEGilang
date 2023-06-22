@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+    <title>Gilang Pendataan Sekolah</title>
+    <script
+        nonce="7ee3b2b1-73c5-48f0-8dce-c5e0497370f1">(function (w, d) { !function (dK, dL, dM, dN) { dK[dM] = dK[dM] || {}; dK[dM].executed = []; dK.zaraz = { deferred: [], listeners: [] }; dK.zaraz.q = []; dK.zaraz._f = function (dO) { return function () { var dP = Array.prototype.slice.call(arguments); dK.zaraz.q.push({ m: dO, a: dP }) } }; for (const dQ of ["track", "set", "debug"]) dK.zaraz[dQ] = dK.zaraz._f(dQ); dK.zaraz.init = () => { var dR = dL.getElementsByTagName(dN)[0], dS = dL.createElement(dN), dT = dL.getElementsByTagName("title")[0]; dT && (dK[dM].t = dL.getElementsByTagName("title")[0].text); dK[dM].x = Math.random(); dK[dM].w = dK.screen.width; dK[dM].h = dK.screen.height; dK[dM].j = dK.innerHeight; dK[dM].e = dK.innerWidth; dK[dM].l = dK.location.href; dK[dM].r = dL.referrer; dK[dM].k = dK.screen.colorDepth; dK[dM].n = dL.characterSet; dK[dM].o = (new Date).getTimezoneOffset(); if (dK.dataLayer) for (const dX of Object.entries(Object.entries(dataLayer).reduce(((dY, dZ) => ({ ...dY[1], ...dZ[1] })), {}))) zaraz.set(dX[0], dX[1], { scope: "page" }); dK[dM].q = []; for (; dK.zaraz.q.length;) { const d_ = dK.zaraz.q.shift(); dK[dM].q.push(d_) } dS.defer = !0; for (const ea of [localStorage, sessionStorage]) Object.keys(ea || {}).filter((ec => ec.startsWith("_zaraz_"))).forEach((eb => { try { dK[dM]["z_" + eb.slice(7)] = JSON.parse(ea.getItem(eb)) } catch { dK[dM]["z_" + eb.slice(7)] = ea.getItem(eb) } })); dS.referrerPolicy = "origin"; dS.src = "/cdn-cgi/zaraz/s.js?z=" + btoa(encodeURIComponent(JSON.stringify(dK[dM]))); dR.parentNode.insertBefore(dS, dR) };["complete", "interactive"].includes(dL.readyState) ? zaraz.init() : dK.addEventListener("DOMContentLoaded", zaraz.init) }(w, d, "zarazData", "script"); })(window, document);</script>
+</head>
+
+<body onload="getData()">
+    <div class="content">
+        <div class="container mt-5">
+              <div class="form-group">
+                <label for="nama_sekolah">Nama Sekolah</label>
+                <input type="text" class="form-control" name="nama_sekolah" id="nama_sekolah" placeholder="Masukkan Nama Sekolah">
+              </div>
+              <div class="form-group">
+                <label for="kepala_sekolah">Kepala Sekolah</label>
+                <input type="text" class="form-control" name="kepala_sekolah" id="kepala_sekolah" placeholder="Masukkan Nama Kepala Sekolah">
+              </div>
+              <div class="form-group">
+                <label for="akreditasi">Akreditasi</label>
+                <input type="text" class="form-control" name="akreditasi" id="akreditasi" placeholder="Masukkan Akreditasi Sekolah">
+              </div>
+              <div class="form-group">
+                <label for="tahun_berdiri">Tahun Berdiri</label>
+                <input type="number" class="form-control" name="tahun_berdiri" id="tahun_berdiri" placeholder="Masukkan Tahun Berdiri Sekolah">
+              </div>
+              <div class="form-group">
+                <label for="jumlah_siswa">Jumlah Siswa</label>
+                <input type="number" class="form-control" name="jumlah_siswa" id="jumlah_siswa" placeholder="Masukkan Jumlah Siswa Sekolah">
+              </div>
+              <button type="submit" id="btn_submit" onclick="saveData()" class="btn btn-primary">Tambah Sekolah</button>
+        
+            <table class="table mt-5">
+              <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                  <th scope="col">Nama Sekolah</th>
+                  <th scope="col">Kepala Sekolah</th>
+                  <th scope="col">Akreditasi</th>
+                  <th scope="col">Tahun Berdiri</th>
+                  <th scope="col">Jumlah Siswa</th>
+                  <th scope="col">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="result">
+              </tbody>
+            </table>
+          </div>
+        <br>
+    </div>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            const getData = async () => {
+                await axios.get(`http://103.163.110.11:3031/schools`)
+                    .then((response) => {
+                        let bucket = ``;
+                        let schools = response.data;
+                        for (let i = 0; i < schools.length; i++) {
+                            bucket += `
+                        <tr>
+                            <td>${i + 1}</td>
+                            <td>${schools[i].nama_sekolah}</td>
+                            <td>${schools[i].kepala_sekolah}</td>
+                            <td>${schools[i].akreditasi}</td>
+                            <td>${schools[i].tahun_berdiri}</td>
+                            <td>${schools[i].jumlah_siswa}</td>
+                            <td><button id="btn_edit" onclick="editData('${schools[i].nama_sekolah}','${schools[i].kepala_sekolah}','${schools[i].akreditasi}','${schools[i].tahun_berdiri}','${schools[i].jumlah_siswa}')">Edit</button>
+                                <button id="btn_hapus" onclick="deleteData('${schools[i].id}')">Delete</button></td>
+                        </tr>
+                        `
+                        }
+                        document.getElementById('result').innerHTML = bucket;
+                    })
+                    .catch((error) => {
+                        console.log(error.message);
+                        let bucket = `
+                    <tr>
+                        <td colspan="4">${error.message}</td>
+                    </tr>
+                    `;
+                        document.getElementById('result').innerHTML = bucket;
+                    });
+            }
+            getData();
+    
+            const editData = (id, nama_sekolah, kepala_sekolah, akreditasi, tahun_berdiri, jumlah_siswa) => {
+                document.getElementById('nama_sekolah').value = nama_sekolah;
+                document.getElementById('kepala_sekolah').value = kepala_sekolah;
+                document.getElementById('akreditasi').value = akreditasi;
+                document.getElementById('tahun_berdiri').value = tahun_berdiri;
+                document.getElementById('jumlah_siswa').value = jumlah_siswa;
+                document.getElementById('btn_submit').innerText = 'Ubah';
+                document.getElementById('btn_submit').setAttribute('onclick', `updateData(${id})`);
+            }
+    
+            const updateData = async (id) => {
+                let nama_sekolahform = document.getElementById('nama_sekolah').value;
+                let kepala_sekolahform = document.getElementById('kepala_sekolah').value;
+                let akreditasiform = document.getElementById('akreditasi').value;
+                let tahun_berdiriform = document.getElementById('tahun_berdiri').value;
+                let jumlah_siswaform = document.getElementById('jumlah_siswa').value;
+                let text = "Betul data akan diubah ?"
+                if (confirm(text) == true) {
+                    await axios.patch(`http://103.163.110.11:3031/schools/${id}`, {
+                        nama_sekolahform: nama_sekolah,
+                        kepala_sekolahform: kepala_sekolah,
+                        akreditasiform: akreditasi,
+                        tahun_berdiriform: tahun_berdiri,
+                        jumlah_siswaform: jumlah_siswa
+                    })
+                        .then((response) => {
+                            getData();
+                            alert("Data Berhasil Diubah");
+                            console.log(response);
+                        })
+                        .catch((error) => {
+                            console.log(error.message);
+                        });
+                }
+            }
+    
+            const saveData = async () => {
+                let nama_sekolahform = document.getElementById('nama_sekolah').value;
+                let kepala_sekolahform = document.getElementById('kepala_sekolah').value;
+                let akreditasiform = document.getElementById('akreditasi').value;
+                let tahun_berdiriform= document.getElementById('tahun_berdiri').value;
+                let jumlah_siswaform  = document.getElementById('jumlah_siswa').value;
+                await axios.post(`http://103.163.110.11:3031/schools`, {
+                        nama_sekolahform: nama_sekolah,
+                        kepala_sekolahform: kepala_sekolah,
+                        akreditasiform: akreditasi,
+                        tahun_berdiriform: tahun_berdiri,
+                        jumlah_siswaform: jumlah_siswa
+                })
+                    .then((response) => {
+                        getData();
+                        alert("Data berhasil ditambahkan");
+                        document.getElementById('nama_sekolah').value = '';
+                        document.getElementById('Kepala_sekolah').value = '';
+                        document.getElementById('akreditasi').value = '';
+                        document.getElementById('tahun_berdiri').value = '';
+                        document.getElementById('jumlah_siswa').value = '';
+                        console.log('Berhasil Ditambahkan');
+                    })
+                    .catch((error) => {
+                        console.log(error.message);
+                    });
+            }
+    
+            const deleteData = async (id) => {
+                let text = "Betul data akan dihapus ?"
+                if (confirm(text) == true) {
+                    await axios.delete(`http://103.163.110.11:3031/schools/${id}`)
+                        .then((response) => {
+                            getData();
+                            alert("Data Berhasil Dihapus");
+                            console.log(response);
+                        })
+                        .catch((error) => {
+                            console.log(error.message);
+                        })
+                }
+            }
+        </script>
+</body>
+
+</html>
